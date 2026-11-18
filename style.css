@@ -1,0 +1,500 @@
+/**
+ * ============================================================
+ *  AquaCEP — Folha de Estilos Principal
+ *  Projeto: Aquecimento Solar da Piscina da Escola
+ *  Descrição: Estilos responsivos, acessíveis e pedagógicos
+ *  Versão: 1.0 — Novembro/2026
+ * ============================================================
+ */
+
+/* ============================================================
+   1. VARIÁVEIS CSS (PALETA DE CORES E CONFIGURAÇÕES)
+   ============================================================ */
+:root {
+  /* Cores principais */
+  --cor-primaria: #0b5394;
+  --cor-secundaria: #f39c12;
+  --cor-destaque: #d35400;
+  
+  /* Cores de texto e fundo */
+  --cor-texto: #1a1a1a;
+  --cor-fundo: #fdfdfd;
+  --cor-fundo-alt: #eef4fa;
+  --cor-borda: #0b5394;
+  
+  /* Acessibilidade */
+  --foco: #ff6b00;
+  
+  /* Espaçamento */
+  --espaco: 1rem;
+}
+
+/* ============================================================
+   2. RESET E CONFIGURAÇÕES BASE
+   ============================================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.7;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* ============================================================
+   3. ACESSIBILIDADE — SKIP LINK E FOCO VISÍVEL
+   ============================================================ */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--cor-primaria);
+  color: #fff;
+  padding: 0.8rem 1.2rem;
+  z-index: 1000;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* Foco visível para todos os elementos interativos */
+a:focus,
+button:focus,
+[tabindex]:focus,
+input:focus,
+select:focus {
+  outline: 3px solid var(--foco);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   4. HEADER E LOGO
+   ============================================================ */
+header {
+  background: linear-gradient(135deg, var(--cor-primaria), #1e88e5);
+  color: #fff;
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.logo-aquacep {
+  background: #fff;
+  color: var(--cor-primaria);
+  padding: 1rem 1.5rem;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 1.8rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-aquacep::before {
+  content: "💧";
+  font-size: 2rem;
+}
+
+header .header-content {
+  flex: 1;
+  min-width: 250px;
+}
+
+header h1 {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  margin-bottom: 0.5rem;
+}
+
+header p {
+  font-size: 1.05rem;
+  opacity: 0.95;
+}
+
+/* ============================================================
+   5. NAVEGAÇÃO (SUMÁRIO)
+   ============================================================ */
+nav {
+  background: var(--cor-fundo-alt);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  border-left: 5px solid var(--cor-secundaria);
+}
+
+nav h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+  color: var(--cor-primaria);
+}
+
+nav ol {
+  padding-left: 1.5rem;
+}
+
+nav li {
+  margin: 0.4rem 0;
+}
+
+nav a {
+  color: var(--cor-primaria);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+nav a:hover {
+  color: var(--cor-destaque);
+}
+
+/* ============================================================
+   6. SEÇÕES DE CONTEÚDO
+   ============================================================ */
+main section {
+  background: #fff;
+  padding: 1.8rem;
+  margin-bottom: 1.8rem;
+  border-radius: 10px;
+  border: 1px solid #d9e3ec;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+  color: var(--cor-primaria);
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 3px solid var(--cor-secundaria);
+}
+
+h3 {
+  color: var(--cor-destaque);
+  margin: 1.2rem 0 0.6rem;
+  font-size: 1.25rem;
+}
+
+h4 {
+  color: var(--cor-primaria);
+  margin: 0.8rem 0 0.4rem;
+  font-size: 1.05rem;
+}
+
+p {
+  margin-bottom: 0.9rem;
+  text-align: justify;
+}
+
+ul, ol {
+  margin: 0.6rem 0 1rem 1.5rem;
+}
+
+li {
+  margin-bottom: 0.4rem;
+}
+
+/* ============================================================
+   7. TABELAS
+   ============================================================ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+}
+
+caption {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  color: var(--cor-primaria);
+}
+
+th, td {
+  border: 1px solid #b8c7d6;
+  padding: 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--cor-primaria);
+  color: #fff;
+  font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--cor-fundo-alt);
+}
+
+/* ============================================================
+   8. COMPONENTES ESPECIAIS
+   ============================================================ */
+
+/* Fórmula destacada */
+.formula {
+  background: #fff8e1;
+  border-left: 5px solid var(--cor-secundaria);
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+  font-family: 'Courier New', monospace;
+  font-size: 1.05rem;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.formula strong {
+  color: var(--cor-destaque);
+}
+
+/* Caixa informativa */
+.info-box {
+  background: #e3f2fd;
+  border: 2px solid var(--cor-primaria);
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.info-box strong {
+  color: var(--cor-primaria);
+}
+
+/* Caixa de aviso */
+.aviso-box {
+  background: #fff3e0;
+  border: 2px solid var(--cor-destaque);
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+/* Detalhes expansíveis */
+details {
+  background: var(--cor-fundo-alt);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  margin: 0.8rem 0;
+  border: 1px solid #c9d6e3;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--cor-primaria);
+  padding: 0.3rem 0;
+}
+
+details[open] summary {
+  margin-bottom: 0.6rem;
+}
+
+/* Calculadora interativa */
+.calc {
+  background: #f1f8e9;
+  padding: 1.2rem;
+  border-radius: 10px;
+  border: 2px solid #7cb342;
+  margin: 1rem 0;
+}
+
+.calc label {
+  display: block;
+  margin: 0.5rem 0 0.3rem;
+  font-weight: 600;
+}
+
+.calc input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 2px solid #7cb342;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.calc button {
+  background: var(--cor-primaria);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.calc button:hover {
+  background: var(--cor-destaque);
+}
+
+.resultado {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border-left: 5px solid var(--cor-secundaria);
+  border-radius: 6px;
+  font-weight: bold;
+  min-height: 1.5rem;
+}
+
+/* Maquete */
+.maquete {
+  background: linear-gradient(135deg, #fff8e1, #ffe0b2);
+  padding: 1.2rem;
+  border-radius: 10px;
+  border: 2px dashed var(--cor-destaque);
+  margin: 1rem 0;
+}
+
+/* ============================================================
+   9. CONTROLES DE ACESSIBILIDADE (FLUTUANTES)
+   ============================================================ */
+.acessibilidade {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--cor-primaria);
+  padding: 0.5rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+.acessibilidade button {
+  background: var(--cor-secundaria);
+  color: #fff;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 2px;
+}
+
+.acessibilidade button:hover {
+  background: var(--cor-destaque);
+}
+
+/* ============================================================
+   10. MODO ALTO CONTRASTE
+   ============================================================ */
+body.alto-contraste {
+  background: #000;
+  color: #fff;
+}
+
+body.alto-contraste section,
+body.alto-contraste header,
+body.alto-contraste nav,
+body.alto-contraste details,
+body.alto-contraste .calc,
+body.alto-contraste .maquete,
+body.alto-contraste .info-box,
+body.alto-contraste .aviso-box {
+  background: #000;
+  color: #fff;
+  border-color: #fff;
+}
+
+body.alto-contraste h2,
+body.alto-contraste h3,
+body.alto-contraste h4,
+body.alto-contraste a,
+body.alto-contraste summary,
+body.alto-contraste caption {
+  color: #ffeb3b;
+}
+
+body.alto-contraste th {
+  background: #ffeb3b;
+  color: #000;
+}
+
+body.alto-contraste tbody tr:nth-child(even) {
+  background: #222;
+}
+
+body.alto-contraste td,
+body.alto-contraste th {
+  border-color: #fff;
+}
+
+body.alto-contraste .logo-aquacep {
+  background: #ffeb3b;
+  color: #000;
+}
+
+/* ============================================================
+   11. FOOTER
+   ============================================================ */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--cor-primaria);
+  color: #fff;
+  border-radius: 10px;
+  margin-top: 2rem;
+}
+
+footer a {
+  color: #ffeb3b;
+}
+
+footer .footer-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* ============================================================
+   12. RESPONSIVIDADE (MOBILE FIRST)
+   ============================================================ */
+@media (max-width: 600px) {
+  body {
+    padding: 0.5rem;
+  }
+  
+  header, main section {
+    padding: 1rem;
+  }
+  
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .logo-aquacep {
+    font-size: 1.5rem;
+    padding: 0.8rem 1.2rem;
+  }
+  
+  table {
+    font-size: 0.85rem;
+  }
+  
+  th, td {
+    padding: 0.4rem;
+  }
+}
