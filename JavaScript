@@ -1,0 +1,262 @@
+/**
+ * ============================================================
+ *  AquaCEP — Script Principal
+ *  Projeto: Aquecimento Solar da Piscina da Escola
+ *  Descrição: Calculadora de energia, controles de acessibilidade
+ *             e interações pedagógicas.
+ *  Versão: 1.0 — Novembro/2026
+ * ============================================================
+ */
+
+(function () {
+  'use strict';
+
+  // ------------------------------------------------------------
+  // 1. CONSTANTES FÍSICAS E DE CONFIGURAÇÃO
+  // ------------------------------------------------------------
+  const CONSTANTES = {
+    JOULE_POR_KCAL: 4186,          // 1 kcal = 4186 J
+    JOULE_POR_KWH: 3600000,        // 1 kWh = 3.600.000 J
+    DENSIDADE_AGUA: 1000,          // kg/m³
+    FATOR_PERDAS: 1.3,             // +30% para perdas térmicas
+    EFICIENCIA_COLETOR: 0.6,       // 60% de eficiência típica
+    PRECO_KWH: 0.80,               // R$/kWh (tarifa estimada)
+    FATOR_REPOSICAO_DIARIA: 0.2,   // 20% das perdas repostas/dia
+    DIAS_MES: 30
+  };
+
+  const ACELIBILIDADE = {
+    FONTE_MIN: 80,
+    FONTE_MAX: 150,
+    FONTE_PASSO: 10,
+    FONTE_PADRAO: 100,
+    CLASSE_CONTRASTE: 'alto-contraste',
+    CHAVE_FONTE: 'aquacep_tamanho_fonte',
+    CHAVE_CONTRASTE: 'aquacep_alto_contraste'
+  };
+
+  // ------------------------------------------------------------
+  // 2. ESTADO DA APLICAÇÃO
+  // ------------------------------------------------------------
+  let tamanhoFonte = ACELIBILIDADE.FONTE_PADRAO;
+
+  // ------------------------------------------------------------
+  // 3. CALCULADORA DE ENERGIA
+  // ------------------------------------------------------------
+
+  /**
+   * Obtém um valor numérico de um campo do formulário.
+   * @param {string} id - ID do elemento input
+   * @returns {number}
+   */
+  function obterValor(id) {
+    const el = document.getElementById(id);
+    if (!el) return NaN;
+    return parseFloat(el.value);
+  }
+
+  /**
+   * Exibe uma mensagem no painel de resultado.
+   * @param {string} html - Conteúdo HTML a ser exibido
+   * @param {string} tipo - 'sucesso' | 'erro' | 'info'
+   */
+  function exibirResultado(html, tipo = 'info') {
+    const resultado = document.getElementById('resultado');
+    if (!resultado) return;
+    resultado.innerHTML = html;
+    resultado.setAttribute('data-tipo', tipo);
+  }
+
+  /**
+   * Executa o cálculo completo de dimensionamento do aquecimento solar.
+   * Aplica a fórmula: Q = m · c · ΔT e considera perdas térmicas.
+   */
+  function calcularEnergia() {
+    try {
+      const comprimento   = obterValor('comprimento');
+      const largura       = obterValor('largura');
+      const profundidade  = obterValor('profundidade');
+      const tempAtual     = obterValor('temp-atual');
+      const tempDesejada  = obterValor('temp-desejada');
+      const hsp           = obterValor('hsp');
+
+      // Validação de entrada
+      const valores = [comprimento, largura, profundidade, tempAtual, tempDesejada, hsp];
+      if (valores.some(v => isNaN(v) || v <= 0)) {
+        exibirResultado('⚠️ Preencha todos os campos com valores válidos.', 'erro');
+        return;
+      }
+      if (tempDesejada <= tempAtual) {
+        exibirResultado('⚠️ A temperatura desejada deve ser maior que a atual.', 'erro');
+        return;
+      }
+      if (hsp < 2 || hsp > 8) {
+        exibirResultado('⚠️ O valor de HSP deve estar entre 2 e 8 kWh/m²/dia.', 'erro');
+        return;
+      }
+
+      // Cálculos físicos
+      const volumeM3     = comprimento * largura * profundidade;
+      const massa        = volumeM3 * CONSTANTES.DENSIDADE_AGUA;
+      const deltaT       = tempDesejada - tempAtual;
+      const qKcal        = massa * deltaT;
+      const qKwh         = (qKcal * CONSTANTES.JOULE_POR_KCAL) / CONSTANTES.JOULE_POR_KWH;
+      const qComPerdas   = qKwh * CONSTANTES.FATOR_PERDAS;
+      const areaColetor  = qComPerdas / (hsp * CONSTANTES.EFICIENCIA_COLETOR);
+      const economiaMensal = qComPerdas * CONSTANTES.FATOR_REPOSICAO_DIARIA
+                           * CONSTANTES.DIAS_MES * CONSTANTES.PRECO_KWH;
+
+      // Exibição formatada
+      const html = `
+        💧 <strong>Volume da piscina:</strong> ${volumeM3.toFixed(1)} m³
+           (${(volumeM3 * 1000).toFixed(0)} L)<br>
+        🌡️ <strong>Variação de temperatura:</strong> ${deltaT.toFixed(1)} °C<br>
+        🔥 <strong>Energia necessária (sem perdas):</strong> ${qKwh.toFixed(1)} kWh<br>
+        📉 <strong>Energia com 30% de perdas:</strong> ${qComPerdas.toFixed(1)} kWh<br>
+        ☀️ <strong>Área estimada de coletores</strong> (eficiência 60%):
+           ${areaColetor.toFixed(1)} m²<br>
+        💰 <strong>Economia mensal estimada</strong> (R$ ${CONSTANTES.PRECO_KWH.toFixed(2)}/kWh):
+           R$ ${economiaMensal.toFixed(2)}*<br>
+        <small>*Considerando reposição diária de 20% das perdas.</small>
+      `;
+      exibirResultado(html, 'sucesso');
+
+      // Log pedagógico no console (útil para depuração em aula)
+      console.log('[AquaCEP] Cálculo realizado:', {
+        volume: volumeM3, deltaT, qKwh, qComPerdas, areaColetor, economiaMensal
+      });
+
+    } catch (erro) {
+      console.error('[AquaCEP] Erro no cálculo:', erro);
+      exibirResultado('❌ Erro inesperado no cálculo. Verifique os valores.', 'erro');
+    }
+  }
+
+  // ------------------------------------------------------------
+  // 4. CONTROLES DE ACESSIBILIDADE
+  // ------------------------------------------------------------
+
+  /**
+   * Aplica o tamanho de fonte atual ao documento.
+   */
+  function aplicarFonte() {
+    document.body.style.fontSize = tamanhoFonte + '%';
+    try {
+      localStorage.setItem(ACELIBILIDADE.CHAVE_FONTE, tamanhoFonte);
+    } catch (e) { /* armazenamento indisponível — ignora silenciosamente */ }
+  }
+
+  function aumentarFonte() {
+    if (tamanhoFonte < ACELIBILIDADE.FONTE_MAX) {
+      tamanhoFonte += ACELIBILIDADE.FONTE_PASSO;
+      aplicarFonte();
+    }
+  }
+
+  function diminuirFonte() {
+    if (tamanhoFonte > ACELIBILIDADE.FONTE_MIN) {
+      tamanhoFonte -= ACELIBILIDADE.FONTE_PASSO;
+      aplicarFonte();
+    }
+  }
+
+  function alternarContraste() {
+    document.body.classList.toggle(ACELIBILIDADE.CLASSE_CONTRASTE);
+    const ativo = document.body.classList.contains(ACELIBILIDADE.CLASSE_CONTRASTE);
+    try {
+      localStorage.setItem(ACELIBILIDADE.CHAVE_CONTRASTE, ativo ? '1' : '0');
+    } catch (e) { /* ignora */ }
+  }
+
+  /**
+   * Restaura as preferências salvas do usuário (fonte e contraste).
+   */
+  function restaurarPreferencias() {
+    try {
+      const fonteSalva = localStorage.getItem(ACELIBILIDADE.CHAVE_FONTE);
+      if (fonteSalva) {
+        tamanhoFonte = parseInt(fonteSalva, 10) || ACELIBILIDADE.FONTE_PADRAO;
+        aplicarFonte();
+      }
+      const contrasteSalvo = localStorage.getItem(ACELIBILIDADE.CHAVE_CONTRASTE);
+      if (contrasteSalvo === '1') {
+        document.body.classList.add(ACELIBILIDADE.CLASSE_CONTRASTE);
+      }
+    } catch (e) { /* ignora */ }
+  }
+
+  // ------------------------------------------------------------
+  // 5. NAVEGAÇÃO E INTERAÇÃO
+  // ------------------------------------------------------------
+
+  /**
+   * Permite abrir/fechar <details> com a tecla Enter (acessibilidade).
+   */
+  function configurarNavegacaoTeclado() {
+    document.addEventListener('keydown', function (evento) {
+      if (evento.key === 'Enter' && evento.target.tagName === 'SUMMARY') {
+        evento.target.click();
+      }
+    });
+  }
+
+  /**
+   * Rola suavemente até a seção ao clicar em links internos do sumário.
+   */
+  function configurarRolagemSuave() {
+    document.querySelectorAll('nav a[href^="#"]').forEach(function (link) {
+      link.addEventListener('click', function (evento) {
+        const destino = document.querySelector(this.getAttribute('href'));
+        if (destino) {
+          evento.preventDefault();
+          destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          destino.focus({ preventScroll: true });
+        }
+      });
+    });
+  }
+
+  // ------------------------------------------------------------
+  // 6. INICIALIZAÇÃO
+  // ------------------------------------------------------------
+
+  /**
+   * Configura todos os event listeners após o DOM estar pronto.
+   */
+  function inicializar() {
+    // Calculadora
+    const btnCalcular = document.querySelector('.calc button');
+    if (btnCalcular) {
+      btnCalcular.addEventListener('click', calcularEnergia);
+    }
+
+    // Acessibilidade
+    const botoesAcessibilidade = document.querySelectorAll('.acessibilidade button');
+    if (botoesAcessibilidade.length >= 3) {
+      botoesAcessibilidade[0].addEventListener('click', aumentarFonte);
+      botoesAcessibilidade[1].addEventListener('click', diminuirFonte);
+      botoesAcessibilidade[2].addEventListener('click', alternarContraste);
+    }
+
+    // Navegação
+    configurarNavegacaoTeclado();
+    configurarRolagemSuave();
+
+    // Preferências do usuário
+    restaurarPreferencias();
+
+    // Cálculo inicial automático (opcional — preenche o resultado padrão)
+    if (document.getElementById('resultado')) {
+      calcularEnergia();
+    }
+
+    console.log('[AquaCEP] Script inicializado com sucesso ☀️💧');
+  }
+
+  // Dispara a inicialização quando o DOM estiver pronto
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializar);
+  } else {
+    inicializar();
+  }
+})();
